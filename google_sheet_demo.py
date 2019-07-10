@@ -125,3 +125,130 @@ class GoogleSheet:
         )
 
         logger.info(f"create sheet result: {result}")
+
+        
+    def auto_resize_dimensions(self, sheet_id: int):
+        """
+        自动调节列的大小
+        :param sheet_id:
+        :return:
+        """
+        request = {
+            "requests": [
+                {
+                    "autoResizeDimensions": {
+                        "dimensions": {
+                            "sheetId": sheet_id,
+                            "dimension": "COLUMNS"
+                        }
+                    }
+                }
+            ]
+        }
+        result = (
+            self.service.spreadsheets()
+                .batchUpdate(spreadsheetId=self.spreadsheet_id, body=request)
+                .execute()
+        )
+
+        logger.info(f"sheet auto resize dimensions result: {result}")
+
+    def format_header_row(self, sheet_id: int):
+        """
+        格式化标题行
+        :param sheet_id:
+        :return:
+        """
+        request = {
+            "requests": [
+                {
+                    "repeatCell": {
+                        "range": {
+                            "sheetId": sheet_id,
+                            "startRowIndex": 0,
+                            "endRowIndex": 1
+                        },
+                        "cell": {
+                            "userEnteredFormat": {
+                                "backgroundColor": {
+                                    "red": 0.0,
+                                    "green": 0.8,
+                                    "blue": 0.0
+                                },
+                                "horizontalAlignment": "CENTER",
+                                "textFormat": {
+                                    "foregroundColor": {
+                                        "red": 0.0,
+                                        "green": 0.0,
+                                        "blue": 0.0
+                                    },
+                                    "fontSize": 10,
+                                    "bold": True
+                                }
+                            }
+                        },
+                        "fields": "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)"
+                    }
+                },
+                {
+                    "updateSheetProperties": {
+                        "properties": {
+                            "sheetId": sheet_id,
+                            "gridProperties": {
+                                "frozenRowCount": 1
+                            }
+                        },
+                        "fields": "gridProperties.frozenRowCount"
+                    }
+                }
+            ]
+        }
+        result = (
+            self.service.spreadsheets()
+                .batchUpdate(spreadsheetId=self.spreadsheet_id, body=request)
+                .execute()
+        )
+
+        logger.info(f"sheet format header row result: {result}")
+    
+    def delete_sheet_rows(self, sheet_id: int, start_index: int, end_index: int, dimension: str = "ROWS"):
+        """
+        删除行或列
+        :param sheet_id:
+        :param start_index:
+        :param end_index:
+        :param dimension: ROWS/COLUMNS
+        :return:
+        """
+        request = {
+            "requests": [
+                {
+                    "deleteDimension": {
+                        "range": {
+                            "sheetId": sheet_id,
+                            "dimension": dimension,
+                            "startIndex": start_index,
+                            "endIndex": end_index
+                        }
+                    }
+                },
+                {
+                  "deleteDimension": {
+                    "range": {
+                      "sheetId": sheetId,
+                      "dimension": "COLUMNS",
+                      "startIndex": 1,
+                      "endIndex": 4
+                    }
+                  }
+                },
+
+            ],
+        }
+        result = (
+            self.service.spreadsheets()
+                .batchUpdate(spreadsheetId=self.spreadsheet_id, body=request)
+                .execute()
+        )
+
+        logger.info(f"delete sheet rows result: {result}")
