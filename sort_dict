@@ -1,0 +1,12 @@
+
+def sort_dict(self, data: dict):
+    d = {}
+    for k in sorted(data.keys()):
+        if isinstance(data[k], dict):
+            value = self.sort_dict(data[k])
+        elif isinstance(data[k], list):
+            value = [self.sort_dict(da) for da in data[k]]
+        else:
+            value = data[k]
+        d[k] = value
+    return d
