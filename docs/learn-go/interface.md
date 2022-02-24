@@ -132,3 +132,43 @@ func Upload (x interface{}) {
 // swith 是返回的又是具体的type
 
 ```
+
+## 通过sort来理解interface
+sort.Sort() 
+go里边的排序方法
+
+python里边的sorted方法需要传递一个iterable对象，即实现了__iter__方法的对象
+go里边也类似，Sort需要传递一个Interface，这个interface需要实现Len, Less, Swap方法
+
+```go
+type Course struct {
+	Name string
+	Price int
+	Url string
+}
+
+type Courses []Course
+
+
+func (c Courses) Len() int {
+	return len(c)
+}
+
+func (c Courses) Less(i, j int ) bool{
+	return c[i].Price < c[j].Price
+}
+
+func (c Courses) Swap(i, j int) {
+	c[i], c[j] = c[j], c[i]
+}
+
+s := Courses{
+    Course{},
+    Course{},
+    Course{},
+}
+
+sort.Sort(s)
+
+```
+
