@@ -38,7 +38,19 @@ go导包还有一种特殊的导入方式
 
 ## 别名
 go里的包别名是前置的，与Python的 as 正好相反
-`import 别名 "包路径"` 
+`import 别名 "包路径"`
 别名还可以设置为 _ ,即匿名引用，
+当我们import一个包的时候，包里如果有一个func init() 的话，init函数将会被自动执行
+一个包里可以定义多个init func，也会全部执行，但并不建议这样做，他们的执行是无序的
+
+匿名引用通常是为了只执行包的init函数，而不希望引入包里的其他函数和变量
 
 
+## goPath开发模式对比
+GOROOT是go语言的安装目录，里边都是一些标准库的包
+GOPATH是go语言的开发目录
+GO111MODULE 是go语言的模块化开发模式，默认是off，可以通过go env -w GO111MODULE=on来开启
+
+
+gopath模式要求你的代码放在GOPATH目录下的source里，并且一定要设置GO111MODULE=off
+这种模式之下会import会先在GOPATH的src下找，如果找不到，再去GOROOT的src下找，再找不到就会报错
