@@ -56,3 +56,44 @@ func main() {
 
 }
 ```
+
+go的这个rpc的序列化协议是采用的go特有的Gob编码，没办法做到跨语言取反序列化
+
+我们可以改用go自带的jsonrpc来构建service
+
+```
+// Service
+rpc.ServerCodec(jsonrpc.NewServerCodec(conn))
+
+// Client
+conn, _ := net.Dial("tcp", ":1234")
+client := rpc.NewClientWithCodec(jsonrpc.NewClientCodec(conn))
+
+```
+
+也可以实现HTTP的rpc
+
+```go
+import (
+    "net/rpc"
+    "net/http"
+)
+
+_ = rpc.RegisterName("HelloService", new(HelloService))
+
+http.HandleFunc("/jsonrpc", func(w http.ResponseWriter, r *http.Request) {
+    
+        var conn io.ReadWriteCloser = struct {
+            io.Writer
+            io.ReadCloser
+        }{
+            ReadCloser: r.Body,
+            Writer:     w,
+        }
+        rpc.ServeRequest(jsonrpc.NewServerCodec(conn))            
+    }
+)
+
+http.ListenAndServe(":1234", nil)
+
+```
