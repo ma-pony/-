@@ -1,5 +1,14 @@
 # 包管理
 
+环境变量配置
+```shell
+export GO111MODULE=on
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:$GOROOT:$GOPATH:$GOBIN
+```
+
 Proxy 里要多配置一个源`https://goproxy.io`,来提供下载包的速度。
 
 项目下边会有一个go.mod的文件,默认内容很简单
