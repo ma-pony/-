@@ -50,7 +50,21 @@ def solve_toh(n_disks):
     solve_toh(n_disks - 1)
     move_disk(n_disks - 1)
     solve_toh(n_disks - 1)
+===========================
+def move(n, a, b, c):
+    if n == 1:
+        print(a, '-->', c)
+        return
 
+    # 把n-1个盘子从a移动到b
+    move(n - 1, a, c, b)
+
+    # 把最底下的盘子从a移动到c
+    move(1, a, b, c)
+
+    # 把n-1个盘子从b移动到c
+    move(n - 1, b, a, c)
+move(3, 'A', 'B', 'C')
  ```
 
 
